@@ -21,7 +21,7 @@
 Summary: Package that installs %{scl}
 Name: %{scl}
 Version: 1.0
-Release: 2%{?dist}
+Release: 3%{?dist}
 License: GPLv2+
 Group: Applications/File
 Source0: README
@@ -126,8 +126,8 @@ EOF
 cat << EOF | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
 %%scl_%{scl_name_base} %{scl}
 %%scl_prefix_%{scl_name_base} %{?scl_prefix}
-%%python_sitelib_%{scl_name_base} %%_scl_root%%python_sitelib
-%%python_sitearch_%{scl_name_base} %%_scl_root%%python_sitearch
+%%python_sitelib_scl %%_scl_root%python_sitelib
+%%python_sitearch_scl %%_scl_root%python_sitearch
 EOF
 
 # install generated man page
@@ -165,6 +165,9 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
 
 %changelog
+* Fri Jul 22 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-3
+- move python_sitelib_cassandra to python_sitelib_scl
+
 * Fri Jul 22 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-2
 - try to hack python path (revert if this is not needed)
 
