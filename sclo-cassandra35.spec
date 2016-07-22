@@ -21,7 +21,7 @@
 Summary: Package that installs %{scl}
 Name: %{scl}
 Version: 1.0
-Release: 1%{?dist}
+Release: 2%{?dist}
 License: GPLv2+
 Group: Applications/File
 Source0: README
@@ -29,6 +29,7 @@ Source1: LICENSE
 Requires: scl-utils
 # Requires: %%{scl_prefix}cassandra-server
 BuildRequires: scl-utils-build help2man
+BuildRequires: python-devel
 
 %description
 This is the main package for %{scl} Software Collection, which installs
@@ -117,12 +118,16 @@ export XDG_CONFIG_DIRS="%{_sysconfdir}/xdg:\${XDG_CONFIG_DIRS:-/etc/xdg}"
 export XDG_DATA_DIRS="%{_datadir}\${XDG_DATA_DIRS:+:\${XDG_DATA_DIRS}}"
 # For pkg-config
 export PKG_CONFIG_PATH="%{_libdir}/pkgconfig\${PKG_CONFIG_PATH:+:\${PKG_CONFIG_PATH}}"
+# For (possible) python modules
+export PYTHONPATH="%{_scl_root}%python_sitelib:%{_scl_root}%python_sitearch\${PYTHONPATH:+:\${PYTHONPATH}}"
 EOF
 
 # generate rpm macros file for depended collections
 cat << EOF | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
 %%scl_%{scl_name_base} %{scl}
 %%scl_prefix_%{scl_name_base} %{?scl_prefix}
+%%python_sitelib_%{scl_name_base} %%_scl_root%%python_sitelib
+%%python_sitearch_%{scl_name_base} %%_scl_root%%python_sitearch
 EOF
 
 # install generated man page
@@ -160,5 +165,8 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
 
 %changelog
+* Fri Jul 22 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-2
+- try to hack python path (revert if this is not needed)
+
 * Wed Jul 20 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-1
 - initial packaging
