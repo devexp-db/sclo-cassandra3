@@ -6,8 +6,6 @@
 %{!?version_minor: %global version_minor 5}
 %{!?scl_name_version: %global scl_name_version %{version_major}%{version_minor}}
 %{!?scl: %global scl %{scl_name_prefix}%{scl_name_base}%{scl_name_version}}
-%{!?scl: %global cassandra_sitelib %{_scl_root}%python_sitelib}
-%{!?scl: %global cassandra_sitearch %{_scl_root}%python_sitearch}
 
 ### TODO: What to do with this?
 # Turn on new layout -- prefix for packages and location for config and variable
@@ -16,6 +14,10 @@
 
 # Define SCL macros
 %{?scl_package:%scl_package %{scl}}
+
+%global cassandra_sitelib  %_scl_root%python_sitelib
+%global cassandra_sitearch %_scl_root%python_sitearch
+%global maven_collection   rh-maven33
 
 # do not produce empty debuginfo package
 %global debug_package %{nil}
@@ -53,11 +55,12 @@ Package shipping essential scripts to work with %{scl} Software Collection.
 %package build
 Summary: Package shipping basic build configuration
 Group: Applications/File
+Requires: %{name}-scldevel
 
 # It is convenient to just configure Mock/Copr/Koji to install SCL_prefix-build
 # package into minimal buildroot.
 Requires: scl-utils-build
-Requires: rh-maven30-scldevel
+Requires: %maven_collection-scldevel
 Requires: rh-java-common-scldevel
 
 %description build
@@ -130,28 +133,29 @@ export PYTHONPATH="%cassandra_sitelib:%cassandra_sitearch\${PYTHONPATH:+:\${PYTH
 EOF
 
 # generate rpm macros file for depended collections
-cat << EOF | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
+cat << EOF | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-scldevel
 %%scl_%{scl_name_base} %{scl}
 %%scl_prefix_%{scl_name_base} %{?scl_prefix}
 EOF
 
-cat <<'EOF' | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl_name_base}-config
+cat <<'EOF' | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
 # Python sitelib might be needed.
 %%scl_package_override() %%{expand:
-
+# Maven collection related.
+%%global scl_mvn %maven_collection
+%%global scl_mvn_prefix %maven_collection-
 # Python related, I'm not sure that this will be actually needed.
-%%global python_sitelib %cassandra_sitelib
-%%global python2_sitelib %cassandra_sitelib
-%%global python_sitearch %cassandra_sitearch
-%%global python2_sitelib %cassandra_sitearch
-
-%%global scl_build_scls rh-java-common rh-maven30
-
+%%%%global python_sitelib %cassandra_sitelib
+%%%%global python2_sitelib %cassandra_sitelib
+%%%%global python_sitearch %cassandra_sitearch
+%%%%global python2_sitelib %cassandra_sitearch
+# Those collections are automatically enabled.
+%%%%global scl_build_scls rh-java-common %%scl_mvn
 # TODO: Find proper place for this?
-%%global scl_enable() \
-    scl enable %%scl %%{?scl_build_scls} %%{?scl_package_build_scls} - <<'_SCL_EOF' \
+%%%%global scl_enable()         \\\
+    scl enable %%%%scl %%%%{?scl_build_scls} %%%%{?scl_package_build_scls} - <<'_SCL_EOF' \\\
     set -x
-%%global scl_disable() _SCL_EOF
+%%%%global scl_disable() _SCL_EOF
 }
 EOF
 
@@ -183,11 +187,11 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 
 %files build
 %doc LICENSE
-%{_root_sysconfdir}/rpm/macros.%{scl_name_base}-config
+%{_root_sysconfdir}/rpm/macros.%{scl}-config
 
 %files scldevel
 %doc LICENSE
-%{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
+%{_root_sysconfdir}/rpm/macros.%{scl}-scldevel
 
 %changelog
 * Tue Jul 26 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-4
