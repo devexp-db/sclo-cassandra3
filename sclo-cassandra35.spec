@@ -6,6 +6,8 @@
 %{!?version_minor: %global version_minor 5}
 %{!?scl_name_version: %global scl_name_version %{version_major}%{version_minor}}
 %{!?scl: %global scl %{scl_name_prefix}%{scl_name_base}%{scl_name_version}}
+%{!?scl: %global cassandra_sitelib %{_scl_root}%python_sitelib}
+%{!?scl: %global cassandra_sitearch %{_scl_root}%python_sitearch}
 
 ### TODO: What to do with this?
 # Turn on new layout -- prefix for packages and location for config and variable
@@ -21,7 +23,7 @@
 Summary: Package that installs %{scl}
 Name: %{scl}
 Version: 1.0
-Release: 3%{?dist}
+Release: 4%{?dist}
 License: GPLv2+
 Group: Applications/File
 Source0: README
@@ -119,15 +121,25 @@ export XDG_DATA_DIRS="%{_datadir}\${XDG_DATA_DIRS:+:\${XDG_DATA_DIRS}}"
 # For pkg-config
 export PKG_CONFIG_PATH="%{_libdir}/pkgconfig\${PKG_CONFIG_PATH:+:\${PKG_CONFIG_PATH}}"
 # For (possible) python modules
-export PYTHONPATH="%{_scl_root}%python_sitelib:%{_scl_root}%python_sitearch\${PYTHONPATH:+:\${PYTHONPATH}}"
+export PYTHONPATH="%cassandra_sitelib:%cassandra_sitearch\${PYTHONPATH:+:\${PYTHONPATH}}"
 EOF
 
 # generate rpm macros file for depended collections
 cat << EOF | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
 %%scl_%{scl_name_base} %{scl}
 %%scl_prefix_%{scl_name_base} %{?scl_prefix}
-%%python_sitelib_scl %%_scl_root%python_sitelib
-%%python_sitearch_scl %%_scl_root%python_sitearch
+EOF
+
+cat <<'EOF' | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl_name_base}-config
+# Python sitelib might be needed.
+%%scl_package_override() %%{expand:
+
+# Python related, I'm not sure that this will be actually needed.
+%%global python_sitelib %cassandra_sitelib
+%%global python2_sitelib %cassandra_sitelib
+%%global python_sitearch %cassandra_sitearch
+%%global python2_sitelib %cassandra_sitearch
+}
 EOF
 
 # install generated man page
@@ -158,13 +170,16 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 
 %files build
 %doc LICENSE
-%{_root_sysconfdir}/rpm/macros.%{scl}-config
+%{_root_sysconfdir}/rpm/macros.%{scl_name_base}-config
 
 %files scldevel
 %doc LICENSE
 %{_root_sysconfdir}/rpm/macros.%{scl_name_base}-scldevel
 
 %changelog
+* Tue Jul 26 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-4
+- use scl_package_override for setting python macros
+
 * Fri Jul 22 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-3
 - move python_sitelib_cassandra to python_sitelib_scl
 
