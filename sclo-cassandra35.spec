@@ -53,7 +53,12 @@ Package shipping essential scripts to work with %{scl} Software Collection.
 %package build
 Summary: Package shipping basic build configuration
 Group: Applications/File
+
+# It is convenient to just configure Mock/Copr/Koji to install SCL_prefix-build
+# package into minimal buildroot.
 Requires: scl-utils-build
+Requires: rh-maven30-scldevel
+Requires: rh-java-common-scldevel
 
 %description build
 Package shipping essential configuration macros to build %{scl} Software
@@ -179,6 +184,7 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %changelog
 * Tue Jul 26 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-4
 - use scl_package_override for setting python macros
+- explicitly depend on -scldevel subpackages
 
 * Fri Jul 22 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-3
 - move python_sitelib_cassandra to python_sitelib_scl
