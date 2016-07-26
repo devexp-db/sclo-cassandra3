@@ -15,9 +15,11 @@
 # Define SCL macros
 %{?scl_package:%scl_package %{scl}}
 
-%global cassandra_sitelib  %_scl_root%python_sitelib
-%global cassandra_sitearch %_scl_root%python_sitearch
-%global maven_collection   rh-maven33
+%global cassandra_sitelib       %_scl_root%python_sitelib
+%global cassandra_sitearch      %_scl_root%python_sitearch
+
+%global scl_mvn                 rh-maven33
+%global scl_java                rh-java-common
 
 # do not produce empty debuginfo package
 %global debug_package %{nil}
@@ -25,7 +27,7 @@
 Summary: Package that installs %{scl}
 Name: %{scl}
 Version: 1.0
-Release: 4%{?dist}
+Release: 5%{?dist}
 License: GPLv2+
 Group: Applications/File
 Source0: README
@@ -60,7 +62,7 @@ Requires: %{name}-scldevel
 # It is convenient to just configure Mock/Copr/Koji to install SCL_prefix-build
 # package into minimal buildroot.
 Requires: scl-utils-build
-Requires: %maven_collection-scldevel
+Requires: %scl_mvn-scldevel
 Requires: rh-java-common-scldevel
 
 %description build
@@ -142,15 +144,17 @@ cat <<'EOF' | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
 # Python sitelib might be needed.
 %%scl_package_override() %%{expand:
 # Maven collection related.
-%%global scl_mvn %maven_collection
-%%global scl_mvn_prefix %maven_collection-
+%%global scl_mvn %scl_mvn
+%%global scl_mvn_prefix %scl_mvn-
+%%global scl_java %scl_java
+%%global scl_java_prefix %scl_java-
 # Python related, I'm not sure that this will be actually needed.
 %%%%global python_sitelib %cassandra_sitelib
 %%%%global python2_sitelib %cassandra_sitelib
 %%%%global python_sitearch %cassandra_sitearch
 %%%%global python2_sitelib %cassandra_sitearch
 # Those collections are automatically enabled.
-%%%%global scl_build_scls rh-java-common %%scl_mvn
+%%%%global scl_build_scls %%scl_mvn %%scl_java
 # TODO: Find proper place for this?
 %%%%global scl_enable()         \\\
     scl enable %%%%scl %%%%{?scl_build_scls} %%%%{?scl_package_build_scls} - <<'_SCL_EOF' \\\
@@ -194,6 +198,9 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %{_root_sysconfdir}/rpm/macros.%{scl}-scldevel
 
 %changelog
+* Tue Jul 26 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-5
+- add scl_java macro
+
 * Tue Jul 26 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-4
 - use scl_package_override for setting python macros
 - explicitly depend on -scldevel subpackages
