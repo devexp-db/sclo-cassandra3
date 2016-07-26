@@ -144,6 +144,14 @@ cat <<'EOF' | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl_name_base}
 %%global python2_sitelib %cassandra_sitelib
 %%global python_sitearch %cassandra_sitearch
 %%global python2_sitelib %cassandra_sitearch
+
+%%global scl_build_scls rh-java-common rh-maven30
+
+# TODO: Find proper place for this?
+%%global scl_enable() \
+    scl enable %%scl %%{?scl_build_scls} %%{?scl_package_build_scls} - <<'_SCL_EOF' \
+    set -x
+%%global scl_disable() _SCL_EOF
 }
 EOF
 
