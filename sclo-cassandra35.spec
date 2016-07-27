@@ -27,7 +27,7 @@
 Summary: Package that installs %{scl}
 Name: %{scl}
 Version: 1.0
-Release: 5%{?dist}
+Release: 6%{?dist}
 License: GPLv2+
 Group: Applications/File
 Source0: README
@@ -154,7 +154,7 @@ cat <<'EOF' | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
 %%%%global python_sitearch %cassandra_sitearch
 %%%%global python2_sitelib %cassandra_sitearch
 # Those collections are automatically enabled.
-%%%%global scl_build_scls %%scl_mvn %%scl_java
+%%%%global scl_build_scls %%scl_java %%scl_mvn
 # TODO: Find proper place for this?
 %%%%global scl_enable()         \\\
     scl enable %%%%scl %%%%{?scl_build_scls} %%%%{?scl_package_build_scls} - <<'_SCL_EOF' \\\
@@ -198,6 +198,9 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %{_root_sysconfdir}/rpm/macros.%{scl}-scldevel
 
 %changelog
+* Wed Jul 27 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-6
+- %%scl_java must be enabled befor %%scl_mvn
+
 * Tue Jul 26 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-5
 - add scl_java macro
 
