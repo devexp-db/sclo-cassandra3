@@ -8,9 +8,10 @@
 %{!?scl: %global scl %{scl_name_prefix}%{scl_name_base}%{scl_name_version}}
 
 ### TODO: What to do with this?
+### <mizdebsk> "nfsmountable" - you depend on rh-java-common for runtime (don't you?), which is *not* nfsmountable, iirc
 # Turn on new layout -- prefix for packages and location for config and variable
 # files This must be before calling %%scl_package
-%{!?nfsmountable: %global nfsmountable 1}
+%{!?nfsmountable: %global nfsmountable 0}
 
 # Define SCL macros
 %{?scl_package:%scl_package %{scl}}
@@ -18,24 +19,21 @@
 %global cassandra_sitelib       %_scl_root%python_sitelib
 %global cassandra_sitearch      %_scl_root%python_sitearch
 
-%global scl_mvn                 rh-maven33
-%global scl_java                rh-java-common
-
 # do not produce empty debuginfo package
 %global debug_package %{nil}
 
-Summary: Package that installs %{scl}
-Name: %{scl}
-Version: 1.0
-Release: 6%{?dist}
-License: GPLv2+
-Group: Applications/File
-Source0: README
-Source1: LICENSE
-Requires: scl-utils
+Summary:	Package that installs %{scl}
+Name:		%{scl}
+Version:	1.0
+Release:	7%{?dist}
+License:	GPLv2+
+Group:		Applications/File
+Source0:	README
+Source1:	LICENSE
+Requires:	scl-utils
 # Requires: %%{scl_prefix}cassandra-server
-BuildRequires: scl-utils-build help2man
-BuildRequires: python-devel
+BuildRequires:	scl-utils-build help2man
+BuildRequires:	python-devel
 
 %description
 This is the main package for %{scl} Software Collection, which installs
@@ -46,32 +44,31 @@ Install this package if you want to use %{scl_pretty_name} %{version_major}.%{ve
 server on your system.
 
 %package runtime
-Summary: Package that handles %{scl} Software Collection.
-Group: Applications/File
-Requires: scl-utils
+Summary:	Package that handles %{scl} Software Collection.
+Group:		Applications/File
+Requires:	scl-utils
 Requires(post): policycoreutils-python libselinux-utils
 
 %description runtime
 Package shipping essential scripts to work with %{scl} Software Collection.
 
 %package build
-Summary: Package shipping basic build configuration
-Group: Applications/File
-Requires: %{name}-scldevel
+Summary:	Package shipping basic build configuration
+Group:		Applications/File
+Requires:	%{name}-scldevel
 
 # It is convenient to just configure Mock/Copr/Koji to install SCL_prefix-build
 # package into minimal buildroot.
-Requires: scl-utils-build
-Requires: %scl_mvn-scldevel
-Requires: rh-java-common-scldevel
+Requires:	scl-utils-build
 
 %description build
 Package shipping essential configuration macros to build %{scl} Software
 Collection or packages depending on %{scl} Software Collection.
 
-### TODO: is this needed?
 %package scldevel
-Summary: Package shipping development files for %{scl}
+Summary:	Package shipping development files for %{scl}
+Requires:	rh-maven33-scldevel
+Requires:	rh-java_common-scldevel
 
 %description scldevel
 Package shipping development files, especially usefull for development of
@@ -154,7 +151,8 @@ cat <<'EOF' | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
 %%%%global python_sitearch %cassandra_sitearch
 %%%%global python2_sitelib %cassandra_sitearch
 # Those collections are automatically enabled.
-%%%%global scl_build_scls %%scl_java %%scl_mvn
+# removed scl_java because it was enabled twice as the scl_mvn depends on it
+%%%%global scl_build_scls %%scl_mvn
 # TODO: Find proper place for this?
 %%%%global scl_enable()         \\\
     scl enable %%%%scl %%%%{?scl_build_scls} %%%%{?scl_package_build_scls} - <<'_SCL_EOF' \\\
@@ -198,6 +196,9 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %{_root_sysconfdir}/rpm/macros.%{scl}-scldevel
 
 %changelog
+* Mon Oct 10 2016 Tomas Repik <trepik@redhat.com>
+- scldevel requires maven33 and java-common scldevel subpackages
+
 * Wed Jul 27 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-6
 - %%scl_java must be enabled befor %%scl_mvn
 
