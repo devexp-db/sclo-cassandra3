@@ -68,7 +68,7 @@ Collection or packages depending on %{scl} Software Collection.
 %package scldevel
 Summary:	Package shipping development files for %{scl}
 Requires:	rh-maven33-scldevel
-Requires:	rh-java_common-scldevel
+Requires:	rh-java-common-scldevel
 
 %description scldevel
 Package shipping development files, especially usefull for development of
