@@ -7,12 +7,6 @@
 %{!?scl_name_version: %global scl_name_version %{version_major}%{version_minor}}
 %{!?scl: %global scl %{scl_name_prefix}%{scl_name_base}%{scl_name_version}}
 
-### TODO: What to do with this?
-### <mizdebsk> "nfsmountable" - you depend on rh-java-common for runtime (don't you?), which is *not* nfsmountable, iirc
-# Turn on new layout -- prefix for packages and location for config and variable
-# files This must be before calling %%scl_package
-%{!?nfsmountable: %global nfsmountable 0}
-
 # Define SCL macros
 %{?scl_package:%scl_package %{scl}}
 
@@ -25,11 +19,12 @@
 Summary:	Package that installs %{scl}
 Name:		%{scl}
 Version:	1.0
-Release:	7%{?dist}
+Release:	8%{?dist}
 License:	GPLv2+
 Group:		Applications/File
 Source0:	README
 Source1:	LICENSE
+Source2:	configuration.xml
 Requires:	scl-utils
 # Requires: %%{scl_prefix}cassandra-server
 BuildRequires:	scl-utils-build help2man
@@ -55,7 +50,7 @@ Package shipping essential scripts to work with %{scl} Software Collection.
 %package build
 Summary:	Package shipping basic build configuration
 Group:		Applications/File
-Requires:	%{name}-scldevel
+Requires:	%{name}-scldevel = %{version}-%{release}
 
 # It is convenient to just configure Mock/Copr/Koji to install SCL_prefix-build
 # package into minimal buildroot.
@@ -68,7 +63,6 @@ Collection or packages depending on %{scl} Software Collection.
 %package scldevel
 Summary:	Package shipping development files for %{scl}
 Requires:	rh-maven33-scldevel
-Requires:	rh-java-common-scldevel
 
 %description scldevel
 Package shipping development files, especially usefull for development of
@@ -85,6 +79,8 @@ EOF
 
 # copy the license file so %%files section sees it
 cp %{SOURCE1} .
+# copy the configuration.xml file so %%files section sees it
+cp %{SOURCE2} .
 
 %build
 # generate a helper script that will be used by help2man
@@ -140,30 +136,22 @@ EOF
 cat <<'EOF' | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
 # Python sitelib might be needed.
 %%scl_package_override() %%{expand:
-# Maven collection related.
-%%global scl_mvn %scl_mvn
-%%global scl_mvn_prefix %scl_mvn-
-%%global scl_java %scl_java
-%%global scl_java_prefix %scl_java-
 # Python related, I'm not sure that this will be actually needed.
 %%%%global python_sitelib %cassandra_sitelib
 %%%%global python2_sitelib %cassandra_sitelib
 %%%%global python_sitearch %cassandra_sitearch
 %%%%global python2_sitelib %cassandra_sitearch
-# Those collections are automatically enabled.
-# removed scl_java because it was enabled twice as the scl_mvn depends on it
-%%%%global scl_build_scls %%scl_mvn
-# TODO: Find proper place for this?
-%%%%global scl_enable()         \\\
-    scl enable %%%%scl %%%%{?scl_build_scls} %%%%{?scl_package_build_scls} - <<'_SCL_EOF' \\\
-    set -x
-%%%%global scl_disable() _SCL_EOF
 }
 EOF
 
 # install generated man page
 mkdir -p %{buildroot}%{_mandir}/man7/
 install -m 644 %{?scl_name}.7 %{buildroot}%{_mandir}/man7/%{?scl_name}.7
+
+# install xmvn configuration
+mkdir -p %{buildroot}%{_sysconfdir}/xdg/
+mkdir -p %{buildroot}%{_sysconfdir}/xdg/mvn
+install -m 644 configuration.xml %{buildroot}%{_sysconfdir}/xdg/xmvn/configuration.xml
 
 %post runtime
 # Simple copy of context from system root to SCL root.
@@ -186,6 +174,7 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %doc README LICENSE
 %{?scl_files}
 %{_mandir}/man7/%{?scl_name}.*
+%{_sysconfdir}/xdg/xmvn/configuration.xml
 
 %files build
 %doc LICENSE
@@ -196,6 +185,10 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %{_root_sysconfdir}/rpm/macros.%{scl}-scldevel
 
 %changelog
+* Wed Oct 26 2016 Tomas Repik <trepik@redhat.com> - 1.0-8
+- use standard SCL macros
+- add config file for xmvn
+
 * Mon Oct 10 2016 Tomas Repik <trepik@redhat.com>
 - scldevel requires maven33 and java-common scldevel subpackages
 

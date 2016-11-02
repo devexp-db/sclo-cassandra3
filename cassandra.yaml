@@ -1,0 +1,34 @@
+# Recipe for cassandra collection
+---
+cassandra39:
+  - name: cassandra 3.9
+  - packages:
+    - cassandra39
+    - high-scale-lib
+    - concurrent-trees
+    - compile-command-annotations
+    - json_simple
+    - jopt-simple
+    - apache-commons-math
+    - jmh
+    - jamm
+    - snowball-java
+    - jBcrypt
+    - stream-lib
+    - compress-lzf
+    - airline
+    - janino
+    - slf4j
+    - logback
+    - disruptor
+    - thrift
+    - disruptor-thrift-server
+    - mvel
+    - cpptasks
+    - lz4-java
+    - 
+    - 
+    - 
+    - 
+    - 
+    - cassandra
