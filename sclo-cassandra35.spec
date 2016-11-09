@@ -156,11 +156,11 @@ mkdir -p %{buildroot}%{_mandir}/man7/
 install -m 644 %{?scl_name}.7 %{buildroot}%{_mandir}/man7/%{?scl_name}.7
 
 # install xmvn configuration
-mkdir -p %{buildroot}%{_sysconfdir}/xdg/
 mkdir -p %{buildroot}%{_sysconfdir}/xdg/xmvn
 install -m 644 configuration.xml %{buildroot}%{_sysconfdir}/xdg/xmvn/configuration.xml
 
 # install java.conf
+mkdir -p %{buildroot}%{_javaconfdir}
 install -m 644 java.conf %{buildroot}%{_javaconfdir}/java.conf
 
 %post runtime
@@ -183,8 +183,6 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %files runtime -f filesystem
 %doc README LICENSE
 %{?scl_files}
-%{_mandir}/man7/%{?scl_name}.*
-%{_sysconfdir}/xdg/xmvn/configuration.xml
 %{_javaconfdir}/java.conf
 
 %files build
