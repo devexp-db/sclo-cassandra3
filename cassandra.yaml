@@ -23,6 +23,9 @@ cassandra39:
     - disruptor
     - thrift
     - disruptor-thrift-server
+    - metrics
+    - bean-validation-api
+    - metrics-reporter-config
     - mvel
     - cpptasks
     - lz4-java

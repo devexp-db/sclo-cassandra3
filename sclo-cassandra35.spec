@@ -19,7 +19,7 @@
 Summary:	Package that installs %{scl}
 Name:		%{scl}
 Version:	1.0
-Release:	8%{?dist}
+Release:	9%{?dist}
 License:	GPLv2+
 Group:		Applications/File
 Source0:	README
@@ -93,6 +93,13 @@ chmod a+x h2m_helper
 # generate the man page
 help2man -N --section 7 ./h2m_helper -o %{?scl_name}.7
 
+# Generate java.conf
+cat <<EOF >java.conf
+JAVA_LIBDIR=/opt/rh/%{scl_name}/root/usr/share/java
+JNI_LIBDIR=/opt/rh/%{scl_name}/root/usr/lib/java
+JVM_ROOT=/opt/rh/%{scl_name}/root/usr/lib/jvm
+EOF
+
 %install
 %{?scl_install}
 
@@ -150,8 +157,11 @@ install -m 644 %{?scl_name}.7 %{buildroot}%{_mandir}/man7/%{?scl_name}.7
 
 # install xmvn configuration
 mkdir -p %{buildroot}%{_sysconfdir}/xdg/
-mkdir -p %{buildroot}%{_sysconfdir}/xdg/mvn
+mkdir -p %{buildroot}%{_sysconfdir}/xdg/xmvn
 install -m 644 configuration.xml %{buildroot}%{_sysconfdir}/xdg/xmvn/configuration.xml
+
+# install java.conf
+install -m 644 java.conf %{buildroot}%{_javaconfdir}/java.conf
 
 %post runtime
 # Simple copy of context from system root to SCL root.
@@ -175,6 +185,7 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %{?scl_files}
 %{_mandir}/man7/%{?scl_name}.*
 %{_sysconfdir}/xdg/xmvn/configuration.xml
+%{_javaconfdir}/java.conf
 
 %files build
 %doc LICENSE
@@ -185,11 +196,14 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %{_root_sysconfdir}/rpm/macros.%{scl}-scldevel
 
 %changelog
+* Wed Nov 09 2016 Tomas Repik <trepik@redhat.com> - 1.0-9
+- generate and install java.conf
+
 * Wed Oct 26 2016 Tomas Repik <trepik@redhat.com> - 1.0-8
 - use standard SCL macros
 - add config file for xmvn
 
-* Mon Oct 10 2016 Tomas Repik <trepik@redhat.com>
+* Mon Oct 10 2016 Tomas Repik <trepik@redhat.com> - 1.0-7
 - scldevel requires maven33 and java-common scldevel subpackages
 
 * Wed Jul 27 2016 Pavel Raiskup <praiskup@redhat.com> - 1.0-6
