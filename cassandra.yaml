@@ -26,12 +26,17 @@ cassandra39:
     - metrics
     - bean-validation-api
     - metrics-reporter-config
-    - mvel
+    - concurrentlinkedhashmap-lru
+    - objectweb-asm
+    - byteman
+    - HdrHistogram
     - cpptasks
+    - sigar
+    - jsr-311
+    - jackson
+    - mvel
     - lz4-java
-    - 
-    - 
-    - 
-    - 
+    - javapoet
+    - caffeine
     - 
     - cassandra

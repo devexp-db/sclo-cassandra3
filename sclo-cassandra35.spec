@@ -123,7 +123,7 @@ export LD_LIBRARY_PATH="%{_libdir}\${LD_LIBRARY_PATH:+:\${LD_LIBRARY_PATH}}"
 # For man pages; empty field makes man to consider also standard path
 export MANPATH="%{_mandir}:\${MANPATH}"
 # For Java Packages Tools to locate java.conf
-export JAVACONFDIRS="%{_sysconfdir}/java:\${JAVACONFDIRS:-/etc/java}"
+JAVACONFDIRS="%{_sysconfdir}/java\${JAVACONFDIRS:+:}\${JAVACONFDIRS:-}"
 # For XMvn to locate its configuration file(s)
 export XDG_CONFIG_DIRS="%{_sysconfdir}/xdg:\${XDG_CONFIG_DIRS:-/etc/xdg}"
 # For systemtap
