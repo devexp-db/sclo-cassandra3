@@ -2,6 +2,7 @@
 ---
 cassandra39:
   - name: cassandra 3.9
+  - requires: [rh-maven33]
   - packages:
     - cassandra39
     - high-scale-lib
@@ -34,6 +35,27 @@ cassandra39:
     - sigar
     - jsr-311
     - jackson
+    - stringtemplate
+    - antlr3:
+	macros:
+          bootstrap: 1
+    - stringtemplate4:
+	macros:
+          bootstrap: 1
+    - antlr3:
+	macros:
+          bootstrap: 0
+    - stringtemplate4:
+	macros:
+          bootstrap: 0
+    - treelayout
+    - antlr4:
+	macros:
+          bootstrap: 1
+    - antlr4:
+	macros:
+          bootstrap: 0
+    - hppc
     - mvel
     - lz4-java
     - javapoet
