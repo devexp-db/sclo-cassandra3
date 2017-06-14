@@ -7,7 +7,6 @@ cassandra39:
     - cassandra39
     - high-scale-lib
     - concurrent-trees
-    - compile-command-annotations
     - json_simple
     - jopt-simple
     - apache-commons-math
@@ -17,7 +16,6 @@ cassandra39:
     - jBcrypt
     - stream-lib
     - compress-lzf
-    - airline
     - janino
     - slf4j
     - logback
@@ -26,7 +24,6 @@ cassandra39:
     - disruptor-thrift-server
     - metrics
     - bean-validation-api
-    - metrics-reporter-config
     - concurrentlinkedhashmap-lru
     - objectweb-asm
     - byteman
@@ -35,7 +32,10 @@ cassandra39:
     - sigar
     - jsr-311
     - jackson
+    - javapoet
+    - caffeine (aqute bndlib update)
     - stringtemplate
+    - guava >= 18.0
     - antlr3:
 	macros:
           bootstrap: 1
@@ -56,9 +56,34 @@ cassandra39:
 	macros:
           bootstrap: 0
     - hppc
+    - airline
     - mvel
-    - lz4-java
-    - javapoet
-    - caffeine
-    - 
+    - lz4-java (xmvn update)
+    - hibernate-jpa-2.1-api
+    - jboss-jms-1.1-api
+    - jeromq
+    - apache-commons-csv
+    - fasterxml-oss-parent
+    - replacer
+    - jackson-parent
+    - jackson-core
+    - jackson-annotations
+    - cglib
+    - assertj-core
+    - powermock
+    - jackson-databind
+    - jackson-module-jaxb-annotations
+    - jackson-dataformat-xml
+    - snakeyaml
+    - jackson-dataformat-yaml
+    - log4j
+    - compile-command-annotations
+    - jzlib
+    - netty
+    - glassfish-jax-rs-api
+    - jsonp
+    - cassandra-java-driver
+    - jflex
+    - metrics-reporter-config
+    - ohc
     - cassandra

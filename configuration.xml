@@ -2,22 +2,22 @@
 <configuration xmlns="http://fedorahosted.org/xmvn/CONFIG/2.0.0">
   <resolverSettings>
     <metadataRepositories>
-      <repository>/opt/rh/sclo-cassandra35/root/usr/share/maven-metadata</repository>
+      <repository>/opt/rh/sclo-cassandra3/root/usr/share/maven-metadata</repository>
     </metadataRepositories>
     <prefixes>
-      <prefix>/opt/rh/sclo-cassandra35/root</prefix>
+      <prefix>/opt/rh/sclo-cassandra3/root</prefix>
     </prefixes>
   </resolverSettings>
   <installerSettings>
-    <metadataDir>opt/rh/sclo-cassandra35/root/usr/share/maven-metadata</metadataDir>
+    <metadataDir>opt/rh/sclo-cassandra3/root/usr/share/maven-metadata</metadataDir>
   </installerSettings>
   <repositories>
     <repository>
       <id>install</id>
       <type>compound</type>
       <properties>
-        <prefix>opt/rh/sclo-cassandra35/root</prefix>
-        <namespace>sclo-cassandra35</namespace>
+        <prefix>opt/rh/sclo-cassandra3/root</prefix>
+        <namespace>sclo-cassandra3</namespace>
       </properties>
       <configuration>
         <repositories>

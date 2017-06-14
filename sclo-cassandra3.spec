@@ -3,7 +3,7 @@
 %{!?scl_name_base: %global scl_name_base cassandra}
 %{!?scl_pretty_name: %global scl_pretty_name Cassandra}
 %{!?version_major: %global version_major 3}
-%{!?version_minor: %global version_minor 5}
+%{!?version_minor: %global version_minor 9}
 %{!?scl_name_version: %global scl_name_version %{version_major}%{version_minor}}
 %{!?scl: %global scl %{scl_name_prefix}%{scl_name_base}%{scl_name_version}}
 
