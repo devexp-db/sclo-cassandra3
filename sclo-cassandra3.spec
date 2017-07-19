@@ -26,7 +26,7 @@ Source0:	README
 Source1:	LICENSE
 Source2:	configuration.xml
 Requires:	scl-utils
-# Requires: %%{scl_prefix}cassandra-server
+Requires: 	%{scl_prefix}cassandra-server
 BuildRequires:	scl-utils-build help2man
 BuildRequires:	python-devel
 
