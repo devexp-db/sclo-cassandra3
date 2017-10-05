@@ -7,11 +7,17 @@
 %{!?scl_name_version: %global scl_name_version %{version_major}%{version_minor}}
 %{!?scl: %global scl %{scl_name_prefix}%{scl_name_base}%{scl_name_version}}
 
+%global safe_python_sitelib %python_sitelib
+%global safe_python_sitearch %python_sitearch
+
 # Define SCL macros
 %{?scl_package:%scl_package %{scl}}
 
-%global cassandra_sitelib       %_scl_root%python_sitelib
-%global cassandra_sitearch      %_scl_root%python_sitearch
+# Bootstrap needed due _javaconfdir
+%global bootstrap 0
+
+%global cassandra_sitelib	%_scl_root%safe_python_sitelib
+%global cassandra_sitearch	%_scl_root%safe_python_sitearch
 
 # do not produce empty debuginfo package
 %global debug_package %{nil}
@@ -19,14 +25,14 @@
 Summary:	Package that installs %{scl}
 Name:		%{scl}
 Version:	1.0
-Release:	9%{?dist}
+Release:	10%{?dist}
 License:	GPLv2+
 Group:		Applications/File
 Source0:	README
 Source1:	LICENSE
 Source2:	configuration.xml
 Requires:	scl-utils
-Requires: 	%{scl_prefix}cassandra-server
+Requires:	%{scl_prefix}cassandra-server
 BuildRequires:	scl-utils-build help2man
 BuildRequires:	python-devel
 
@@ -138,17 +144,18 @@ EOF
 cat << EOF | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-scldevel
 %%scl_%{scl_name_base} %{scl}
 %%scl_prefix_%{scl_name_base} %{?scl_prefix}
-EOF
 
-cat <<'EOF' | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
 # Python sitelib might be needed.
 %%scl_package_override() %%{expand:
 # Python related, I'm not sure that this will be actually needed.
 %%%%global python_sitelib %cassandra_sitelib
 %%%%global python2_sitelib %cassandra_sitelib
 %%%%global python_sitearch %cassandra_sitearch
-%%%%global python2_sitelib %cassandra_sitearch
+%%%%global python2_sitearch %cassandra_sitearch
 }
+EOF
+
+cat <<'EOF' | tee -a %{buildroot}%{_root_sysconfdir}/rpm/macros.%{scl}-config
 EOF
 
 # install generated man page
@@ -183,7 +190,9 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %files runtime -f filesystem
 %doc README LICENSE
 %{?scl_files}
+%if ! 0%{?bootstrap}
 %{_javaconfdir}/java.conf
+%endif
 
 %files build
 %doc LICENSE
@@ -194,6 +203,10 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %{_root_sysconfdir}/rpm/macros.%{scl}-scldevel
 
 %changelog
+* Thu Oct 05 2017 Augusto Mecking Caringi <acaringi@redhat.com> - 1.0-10
+- fixed python sitelib/sitearch variables
+- fixed bootstrap for java.conf
+
 * Wed Nov 09 2016 Tomas Repik <trepik@redhat.com> - 1.0-9
 - generate and install java.conf
 

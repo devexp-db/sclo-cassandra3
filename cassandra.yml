@@ -5,6 +5,11 @@ cassandra39:
   - requires: [rh-maven33]
   - packages:
     - cassandra39
+        macros:
+          bootstrap: 1
+    - cassandra39
+        macros:
+          bootstrap: 0
     - high-scale-lib
     - concurrent-trees
     - json_simple
