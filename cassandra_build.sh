@@ -22,7 +22,10 @@ dep_list=(jamm janino slf4j logback snakeyaml bean-validation-api metrics metric
           fasterxml-oss-parent jackson-parent jackson-annotations jackson-dataformat-yaml
           jackson-databind jackson-core apache-commons-csv jeromq jboss-jms-1.1-api
           hibernate-jpa-2.1-api disruptor log4j ohc glassfish-jax-rs-api jsonp jctools jzlib netty
-          jnr-constants jnr-ffi jnr-posix jnr-x86asm jffi cassandra-java-driver cassandra)
+          jnr-constants jnr-ffi jnr-posix jnr-x86asm jffi cassandra-java-driver cassandra
+          python-futures python-blist python-simplejson python-scales python-sure python-pretend
+          python-packaging libsodium zeromq python-zmq Cython python-eventlet
+          python-cassandra-driver)
 
 cassandra=cassandra35
 github_repo_org=https://github.com/devexp-db
