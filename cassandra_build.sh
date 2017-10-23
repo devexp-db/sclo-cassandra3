@@ -13,19 +13,18 @@
 
 # list of cassandra dependencies
 dep_list=(jamm janino slf4j logback snakeyaml bean-validation-api metrics metrics-reporter-config
-          treelayout antlr4 stringtemplate4 hppc stream-lib high-scale-lib concurrent-trees
-          concurrentlinkedhashmap-lru json_simple compress-lzf guava airline mvel cpptasks
-          lz4-java cglib assertj-core compile-command-annotations stringtemplate antlr3 sigar
-          jBCrypt apache-commons-math jopt-simple jmh snowball-java objectweb-asm byteman
-          HdrHistogram javapoet caffeine jsr-311 jackson jflex snappy-java
-          jackson-module-jaxb-annotations jackson-dataformat-xml powermock replacer
-          fasterxml-oss-parent jackson-parent jackson-annotations jackson-dataformat-yaml
-          jackson-databind jackson-core apache-commons-csv jeromq jboss-jms-1.1-api
-          hibernate-jpa-2.1-api disruptor log4j ohc glassfish-jax-rs-api jsonp jctools jzlib netty
-          jnr-constants jnr-ffi jnr-posix jnr-x86asm jffi cassandra-java-driver cassandra
-          python-futures python-blist python-simplejson python-scales python-sure python-pretend
-          python-packaging libsodium zeromq python-zmq Cython python-eventlet
-          python-cassandra-driver)
+          treelayout stringtemplate antlr3 stringtemplate4 antlr4 hppc stream-lib high-scale-lib
+          concurrent-trees concurrentlinkedhashmap-lru json_simple compress-lzf guava airline mvel
+          cpptasks lz4-java cglib assertj-core powermock compile-command-annotations sigar jBCrypt
+          apache-commons-math jopt-simple jmh snowball-java objectweb-asm byteman HdrHistogram
+          javapoet caffeine jsr-311 jackson fasterxml-oss-parent replacer jackson-parent
+          jackson-core jackson-annotations jflex snappy-java jackson-databind
+          jackson-module-jaxb-annotations jackson-dataformat-xml jackson-dataformat-yaml
+          apache-commons-csv jeromq jboss-jms-1.1-api hibernate-jpa-2.1-api disruptor log4j ohc
+          glassfish-jax-rs-api jsonp jctools jzlib netty jffi jnr-x86asm jnr-constants jnr-ffi
+          jnr-posix cassandra-java-driver python-futures python-blist python-simplejson
+          python-scales python-sure python-pretend python-packaging libsodium zeromq Cython
+          python-zmq python-eventlet python-cassandra-driver cassandra)
 
 cassandra=cassandra35
 github_repo_org=https://github.com/devexp-db
