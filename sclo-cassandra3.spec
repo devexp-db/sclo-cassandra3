@@ -4,7 +4,7 @@
 %{!?scl_pretty_name: %global scl_pretty_name Cassandra}
 %{!?version_major: %global version_major 3}
 %{!?version_minor: %global version_minor 9}
-%{!?scl_name_version: %global scl_name_version %{version_major}%{version_minor}}
+%{!?scl_name_version: %global scl_name_version %{version_major}}
 %{!?scl: %global scl %{scl_name_prefix}%{scl_name_base}%{scl_name_version}}
 
 %global safe_python_sitelib %python_sitelib
@@ -25,7 +25,7 @@
 Summary:	Package that installs %{scl}
 Name:		%{scl}
 Version:	1.0
-Release:	10%{?dist}
+Release:	11%{?dist}
 License:	GPLv2+
 Group:		Applications/File
 Source0:	README
@@ -203,6 +203,9 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %{_root_sysconfdir}/rpm/macros.%{scl}-scldevel
 
 %changelog
+* Mon Oct 23 2017 Augusto Mecking Caringi <acaringi@redhat.com> - 1.0-11
+- drop version_minor from scl_name_version
+
 * Thu Oct 05 2017 Augusto Mecking Caringi <acaringi@redhat.com> - 1.0-10
 - fixed python sitelib/sitearch variables
 - fixed bootstrap for java.conf
