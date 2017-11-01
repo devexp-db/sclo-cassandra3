@@ -10,6 +10,11 @@
 %global safe_python_sitelib %python_sitelib
 %global safe_python_sitearch %python_sitearch
 
+# Turn on new layout -- prefix for packages and location
+# for config and variable files
+# This must be before calling %%scl_package
+%{!?nfsmountable: %global nfsmountable 1}
+
 # Define SCL macros
 %{?scl_package:%scl_package %{scl}}
 
@@ -25,16 +30,19 @@
 Summary:	Package that installs %{scl}
 Name:		%{scl}
 Version:	1.0
-Release:	11%{?dist}
+Release:	12%{?dist}
 License:	GPLv2+
 Group:		Applications/File
 Source0:	README
 Source1:	LICENSE
 Source2:	configuration.xml
 Requires:	scl-utils
-Requires:	%{scl_prefix}cassandra-server
+Requires:	%{?scl_prefix}cassandra-server
 BuildRequires:	scl-utils-build help2man
 BuildRequires:	python-devel
+# javapackages-tools defines %%{_javaconfdir} macro and owns that directory
+Requires:	%{?scl_prefix_java_common}javapackages-tools
+BuildRequires:	%{?scl_prefix_java_common}javapackages-tools
 
 %description
 This is the main package for %{scl} Software Collection, which installs
@@ -203,6 +211,10 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %{_root_sysconfdir}/rpm/macros.%{scl}-scldevel
 
 %changelog
+* Wed Nov 01 2017 Augusto Mecking Caringi <acaringi@redhat.com> - 1.0-12
+- turn on new layout -- prefix for packages and location (#1507535)
+- add requires/buildrequires javapackages-tools
+
 * Mon Oct 23 2017 Augusto Mecking Caringi <acaringi@redhat.com> - 1.0-11
 - drop version_minor from scl_name_version
 
