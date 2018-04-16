@@ -30,7 +30,7 @@
 Summary:	Package that installs %{scl}
 Name:		%{scl}
 Version:	1.0
-Release:	12%{?dist}
+Release:	13%{?dist}
 License:	GPLv2+
 Group:		Applications/File
 Source0:	README
@@ -126,6 +126,8 @@ mkdir -p %{buildroot}%{_datadir}/aclocal
 
 # create enable scriptlet that sets correct environment for collection
 cat << EOF | tee -a %{buildroot}%{?_scl_scripts}/enable
+. scl_source enable rh-maven33
+[ -f /opt/rh/rh-java-common/enable ] && . scl_source enable rh-java-common
 # For binaries
 export PATH="%{_bindir}\${PATH:+:\${PATH}}"
 # For header files
@@ -211,6 +213,9 @@ restorecon -R %{_localstatedir} >/dev/null 2>&1 || :
 %{_root_sysconfdir}/rpm/macros.%{scl}-scldevel
 
 %changelog
+* Mon Apr 16 2018 Augusto Mecking Caringi <acaringi@redhat.com> - 1.0-13
+- automatically enable dependent collections when sclo-cassandra3 is enabled
+
 * Wed Nov 01 2017 Augusto Mecking Caringi <acaringi@redhat.com> - 1.0-12
 - turn on new layout -- prefix for packages and location (#1507535)
 - add requires/buildrequires javapackages-tools
